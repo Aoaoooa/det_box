@@ -42,7 +42,7 @@ class detect:
         save_path = config["section1"]["save_path"]
         save_path = save_path + "box.jpg"
         # img_path = '../det_box/box1.jpg'
-        detect_model = detect(FILE + onnx_path,FILE + img_path,FILE + save_path)
+        detect_model = detect(FILE + onnx_path,img_path,FILE + save_path)
         detect_model.__infer__()
         detect_model.draw()
         detect_model.save()
