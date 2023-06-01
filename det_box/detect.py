@@ -1,16 +1,20 @@
+import sys
 from PIL import Image,ImageDraw
 import toml
 import os.path as osp
-FILE = osp.abspath(osp.dirname(__file__))
-# from utils.operation import YOLO
-from utils.operation import YOLO
+import cv2
+
+# FILE = osp.abspath(osp.dirname(__file__))
+
+# sys.path.append('/../')
+from det_box.utils.operation import *
 
 class detect:
     #初始化
-    def __init__(self,onnx_path,img_path,save_path):
+    def __init__(self,onnx_path,img_path):
         self.onnx_path = onnx_path
         self.img_path = img_path
-        self.save_path = save_path
+        # self.save_path = save_path
 
     #onnx推断
     def __infer__(self):
@@ -29,34 +33,43 @@ class detect:
             text_color = (255, 255, 0) 
             draw.text(text_position,text,text_color)
     
-    #保存
-    def save(self):
 
-        # output_name = "output.jpg"
-        save_path = self.save_path
+    def save(self):
+        save_path = ONNXModel(self.onnx_path).create_savedir()
+        # print(save_path)
+        save_path = os.path.join(save_path,"output.jpg")
         self.img.save(save_path)
+        # cv2.imwrite(str(save_path),self.img)
+
+
+    #保存
+    # def save(self):
+
+    #     # output_name = "output.jpg"
+        # save_path = self.save_path
+        # self.img.save(save_path)
 
     def main(img_path):
-        config = toml.load("/home/weih/projects/det_box/config/config.toml")
+        toml_dir = 'config/config.toml'
+        config = toml.load(toml_dir)
         onnx_path = config["section1"]["onnx_path"]
         save_path = config["section1"]["save_path"]
-        save_path = save_path + "box.jpg"
+
+        save_path = detect.save
+        # save_path = save_path + "box.jpg"
         # img_path = '../det_box/box1.jpg'
-        detect_model = detect(FILE + onnx_path,img_path,FILE + save_path)
+        detect_model = detect(onnx_path,img_path)
         detect_model.__infer__()
         detect_model.draw()
         detect_model.save()
         # print(img_path)
 
-# img_path = '/../det_box/box1.jpg'
+
+
+# img_path = '/home/weih/projects/det_box/dataset/box1.jpg'
 # main(img_path)
 if __name__ == "__main__":
     detect.main(img_path)
-
-    
-
-        
-
 
 
 

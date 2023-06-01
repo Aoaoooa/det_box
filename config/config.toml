@@ -1,4 +1,8 @@
 [section1]
 ckpt_f = "/../checkpoints/best.onnx"
-onnx_path = "/../det_box/checkpoints/best.onnx"
+onnx_path = "checkpoints/best.onnx"
 save_path = "/../det_box/results/"
+
+[output]
+output_path = "results/output/"
+name = "exp"

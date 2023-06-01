@@ -5,15 +5,18 @@ import onnxruntime
 import numpy as np
 from PIL import Image
 from pathlib import Path
+import os.path as osp
 from vstools.utils import toml2obj
+import os
 
 # sys.path.append('/../')
 # from utils.orientation import non_max_suppression, tag_images
 
-from utils.orientation import non_max_suppression, tag_images
+sys.path.append('/../../')
+from det_box.utils.orientation import non_max_suppression, tag_images
 
 
-class ONNXModel(object):
+class ONNXModel():
     def __init__(self, onnx_path):
         """
         :param onnx_path:
@@ -86,7 +89,7 @@ class ONNXModel(object):
         image_numpy = image_numpy.astype(np.float32) / 255.0
         return image_numpy
 
-    def increment_path(self,path):
+    def increment_path(path):
         path = Path(path)
         if path.exists():
             for n in range(2, 9999):
@@ -99,8 +102,8 @@ class ONNXModel(object):
     def create_savedir(self):
         """创建自增的结果目录"""
         self.cfg = toml2obj('config/config.toml')
-        output_path = self.cfg["output"]["output_path"]
-        save_dir = self.increment_path(Path(self.cfg.output.output_path) / self.cfg.output.name)
+        # output_path = self.cfg["output"]["output_path"]
+        save_dir = ONNXModel.increment_path(Path(self.cfg.output.output_path) / self.cfg.output.name)
         save_dir.mkdir(parents=True, exist_ok=True) # parents=True 若父级目录不存在，则创建父级目录； exist_ok=True 若目录存在，则不抛出异常，忽略此操作
         return save_dir
 
